@@ -1,35 +1,55 @@
 package com.example.firstapp.demo.controller;
 
-import com.example.firstapp.demo.entity.Student;
+import com.example.firstapp.demo.model.ApiResponse;
 import com.example.firstapp.demo.model.StudentDTO;
 import com.example.firstapp.demo.service.StudentService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
+@RequiredArgsConstructor
 public class StudentController {
 
-    @Autowired
-    StudentService service;
+    private final StudentService service;
 
     @GetMapping(value = "/welcome")
-    public String welcomeMsg() {
-        return "Welcome to Student API";
+    public ResponseEntity<ApiResponse<String>> welcomeMsg() {
+        return ResponseEntity.ok(new ApiResponse<>(true, "Welcome to Student API", "Hello World"));
     }
 
-    @GetMapping(value = "/all")
-    public List<Student> getAllStudents() {
-        return service.getAllStudents();
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<StudentDTO>>> getAllStudents() {
+        List<StudentDTO> students = service.getAllStudents();
+        return ResponseEntity.ok(new ApiResponse<>(true, "Students fetched successfully", students));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<StudentDTO>> getStudentById(@PathVariable Long id) {
+        StudentDTO student = service.getStudentById(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Student fetched successfully", student));
     }
 
     @PostMapping
-    public Student saveStudent(
-            @RequestBody @Valid StudentDTO student) {
+    public ResponseEntity<ApiResponse<StudentDTO>> saveStudent(@RequestBody @Valid StudentDTO student) {
+        StudentDTO savedStudent = service.save(student);
+        return new ResponseEntity<>(new ApiResponse<>(true, "Student saved successfully", savedStudent), HttpStatus.CREATED);
+    }
 
-        return null;
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<StudentDTO>> updateStudent(@PathVariable Long id, @RequestBody @Valid StudentDTO studentDTO) {
+        StudentDTO updatedStudent = service.updateStudent(id, studentDTO);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Student updated successfully", updatedStudent));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<String>> deleteStudent(@PathVariable Long id) {
+        service.deleteStudent(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Student deleted successfully with id: " + id, null));
     }
 }

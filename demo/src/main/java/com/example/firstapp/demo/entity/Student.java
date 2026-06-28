@@ -25,6 +25,4 @@ public class Student {
     private String image;
     private String password;
     private String role;
-
-    // getters setters
 }
