@@ -1,8 +1,8 @@
 package com.example.firstapp.demo.model;
 
 import lombok.Data;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.hibernate.annotations.processing.Pattern;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 
 
 @Data

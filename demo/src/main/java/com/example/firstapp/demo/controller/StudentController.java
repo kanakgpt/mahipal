@@ -3,6 +3,7 @@ package com.example.firstapp.demo.controller;
 import com.example.firstapp.demo.entity.Student;
 import com.example.firstapp.demo.model.StudentDTO;
 import com.example.firstapp.demo.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
